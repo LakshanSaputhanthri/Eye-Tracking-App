@@ -8,30 +8,47 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Link } from "expo-router";
+import axios from "axios";
+import { BASEURL } from "../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LogLevel, OneSignal } from "react-native-onesignal";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(false);
 
   const handleLogin = () => {
-    // Here you can implement your login logic
-    console.log("Logging in with:", { email, username, password });
+    axios
+      .post(`${BASEURL}/api-auth/auth/login/`, {
+        username,
+        password,
+      })
+      .then(async function (response) {
+        if (response.status === 200) {
+          try {
+            setIsLogin(true);
+            OneSignal.login(username);
+            await AsyncStorage.setItem("token", response.data.token);
+            await AsyncStorage.setItem("username", username);
+            console.log("Login successful");
+            console.log(response);
+          } catch (error) {
+            console.error("Error storing data:", error);
+          }
+        } else {
+          console.log("Unexpected status code:", response.status);
+        }
+      })
+      .catch(function (error) {
+        console.log("Error:", error);
+      });
   };
 
   return (
     <View style={styles.container}>
       {!isLogin && (
         <>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
           <TextInput
             style={styles.input}
             placeholder="Username"
@@ -102,6 +119,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
+    height: 40,
     marginBottom: 10,
     paddingHorizontal: 10,
     paddingVertical: 8,
@@ -109,6 +127,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
     backgroundColor: "#fff",
     borderRadius: 10,
+    fontSize: 18,
   },
   buttonText: {
     color: "#fff",

@@ -7,7 +7,7 @@ const RootLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          title: "Login For Eye Tracker ",
+          title: "Login",
           headerStyle: { backgroundColor: "#A3A4A3" },
           headerTintColor: "#fff",
           headerTitleStyle: {
