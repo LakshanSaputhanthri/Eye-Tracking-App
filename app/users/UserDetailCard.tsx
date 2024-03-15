@@ -48,6 +48,12 @@ export const UserDetailCard = ({
   return (
     <View style={[styles.container, { borderColor }]}>
       <View style={styles.row}>
+        <Text style={styles.title}>status</Text>
+        <Text style={styles.description}>
+          {status === null ? "Normal" : status}
+        </Text>
+      </View>
+      <View style={styles.row}>
         <Text style={styles.title}>Patient First Name</Text>
         <Text style={styles.description}>{firstName}</Text>
       </View>

@@ -2,47 +2,42 @@ import React, { useState } from "react";
 import {
   View,
   TextInput,
-  Button,
   StyleSheet,
   Text,
   TouchableOpacity,
 } from "react-native";
-import { Link, router, useNavigation } from "expo-router";
+import AsyncStorage, {
+  useAsyncStorage,
+} from "@react-native-async-storage/async-storage";
+
+import { router } from "expo-router";
 import axios from "axios";
 import { BASEURL } from "../config";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LogLevel, OneSignal } from "react-native-onesignal";
+import { OneSignal } from "react-native-onesignal";
+import { useMutation } from "@tanstack/react-query";
 
 const LoginForm = () => {
+  const { setItem } = useAsyncStorage("token");
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    axios
-      .post(`${BASEURL}/api-auth/auth/login/`, {
+  const mutation = useMutation({
+    mutationFn: () =>
+      axios.post(`${BASEURL}/api-auth/auth/login/`, {
         username,
         password,
-      })
-      .then(async function (response) {
-        if (response.status === 200) {
-          try {
-            OneSignal.login(username);
-            router.replace("/users/user");
-            await AsyncStorage.setItem("token", response.data.token);
-            await AsyncStorage.setItem("username", username);
-            console.log("Login successful");
-            console.log(response);
-          } catch (error) {
-            console.error("Error storing data:", error);
-          }
-        } else {
-          console.log("Unexpected status code:", response.status);
-        }
-      })
-      .catch(function (error) {
-        console.log("Error:", error);
-      });
-  };
+      }),
+    onSuccess: async (data) => {
+      await AsyncStorage.setItem("token", data.data["access"]);
+      OneSignal.login(username);
+      console.log("object");
+      router.replace("/users/user");
+    },
+    onError: () => {
+      console.log("kkkk");
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -79,7 +74,7 @@ const LoginForm = () => {
               justifyContent: "center",
               alignItems: "center",
             }}
-            onPress={handleLogin}
+            onPress={() => mutation.mutate()}
           >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
@@ -97,6 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    gap: 8,
   },
   input: {
     width: "100%",
@@ -105,10 +101,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
     backgroundColor: "#fff",
     borderRadius: 10,
     fontSize: 18,
+    borderStyle: "solid",
+    borderColor: "black",
+    borderWidth: 2,
   },
   buttonText: {
     color: "#fff",

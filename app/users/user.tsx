@@ -49,9 +49,10 @@ const User = () => {
   useEffect(() => {
     setTimeout(() => {
       setCount((count) => count + 1);
-    }, 2000);
+    }, 120000);
   }, [count]);
   useEffect(() => {
+    console.log(count);
     axios
       .get<PATIENT[]>(`${BASEURL}/api/v1/users/my_patients/`, {
         headers: {
@@ -60,14 +61,16 @@ const User = () => {
       })
       .then(function (response) {
         setPatientData(response.data);
+        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [token]);
+  }, [token, count]);
   return (
     <View>
-      {patientData?.flatMap((item) => (
+      <View>{!patientData && <Text>Loading...</Text>}</View>
+      {patientData?.slice(0, 1).flatMap((item) => (
         <UserDetailCard
           key={item.id}
           firstName={item.first_name}
