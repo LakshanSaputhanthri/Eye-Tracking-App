@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import LoginForm from "./component/LoginForm";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import "react-native-gesture-handler";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const initOneSignal = () => {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -12,11 +13,14 @@ const initOneSignal = () => {
 
 const Index = () => {
   initOneSignal();
+  const queryClient = new QueryClient();
 
   return (
-    <View style={styles.container}>
-      <LoginForm />
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <View style={styles.container}>
+        <LoginForm />
+      </View>
+    </QueryClientProvider>
   );
 };
 const styles = StyleSheet.create({

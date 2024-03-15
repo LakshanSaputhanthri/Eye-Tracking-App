@@ -1,0 +1,24 @@
+export type PATIENT = {
+  id: string;
+  password: string;
+  last_login: string;
+  is_superuser: false;
+  username: string;
+  first_name: string;
+  last_name: string;
+  is_staff: false;
+  is_active: false;
+  date_joined: string;
+  email: string;
+  alerted_timestamp: string;
+  alert_message: string;
+  hospital: string;
+  status: string;
+  mobile: string;
+  contact_name: string;
+  address: string;
+  age: number;
+  caretaker: string;
+  groups: number[];
+  user_permissions: number[];
+};

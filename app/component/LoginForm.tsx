@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, router, useNavigation } from "expo-router";
 import axios from "axios";
 import { BASEURL } from "../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,7 +16,6 @@ import { LogLevel, OneSignal } from "react-native-onesignal";
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(false);
 
   const handleLogin = () => {
     axios
@@ -27,8 +26,8 @@ const LoginForm = () => {
       .then(async function (response) {
         if (response.status === 200) {
           try {
-            setIsLogin(true);
             OneSignal.login(username);
+            router.replace("/users/user");
             await AsyncStorage.setItem("token", response.data.token);
             await AsyncStorage.setItem("username", username);
             console.log("Login successful");
@@ -47,48 +46,21 @@ const LoginForm = () => {
 
   return (
     <View style={styles.container}>
-      {!isLogin && (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            onChangeText={(text) => setUsername(text)}
-            value={username}
-            autoCapitalize="none"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            secureTextEntry
-          />
-          <View
-            style={{
-              backgroundColor: "blue",
-              padding: 10,
-              width: "100%",
-              borderRadius: 10,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                display: "flex",
-                direction: "inherit",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              onPress={handleLogin}
-            >
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
-      {isLogin && (
+      <>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          secureTextEntry
+        />
         <View
           style={{
             backgroundColor: "blue",
@@ -99,11 +71,20 @@ const LoginForm = () => {
             alignItems: "center",
           }}
         >
-          <Link href={"users/user"}>
-            <Text style={styles.buttonText}>Patient Care</Text>
-          </Link>
+          <TouchableOpacity
+            style={{
+              width: "100%",
+              display: "flex",
+              direction: "inherit",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={handleLogin}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
         </View>
-      )}
+      </>
     </View>
   );
 };
