@@ -34,13 +34,14 @@ const LoginForm = () => {
       console.log("object");
       router.replace("/users/user");
     },
-    onError: () => {
-      console.log("kkkk");
+    onError: (err) => {
+      console.log("kkkk", err);
     },
   });
 
   return (
     <View style={styles.container}>
+      {mutation.isPending && <Text>Login...</Text>}
       <>
         <TextInput
           style={styles.input}
@@ -56,29 +57,31 @@ const LoginForm = () => {
           value={password}
           secureTextEntry
         />
-        <View
-          style={{
-            backgroundColor: "blue",
-            padding: 10,
-            width: "100%",
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
+        {!mutation.isPending && (
+          <View
             style={{
+              backgroundColor: "blue",
+              padding: 10,
               width: "100%",
-              display: "flex",
-              direction: "inherit",
+              borderRadius: 10,
               justifyContent: "center",
               alignItems: "center",
             }}
-            onPress={() => mutation.mutate()}
           >
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                display: "flex",
+                direction: "inherit",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => mutation.mutate()}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </>
     </View>
   );

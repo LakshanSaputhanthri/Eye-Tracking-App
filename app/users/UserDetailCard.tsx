@@ -29,21 +29,15 @@ export const UserDetailCard = ({
 }: Props) => {
   let borderColor = "#77ff99";
 
-  if (status === "EMERGENCY") {
+  if (status === "emergency") {
     borderColor = "#ff5566";
   }
-  if (status === "HUNGRY") {
+  if (status === "hungry") {
     borderColor = "#f6f765";
   }
-  if (status === "WASHROOM") {
+  if (status === "toilet") {
     borderColor = "#6677ff";
   }
-  const indicator = {
-    normal: "green",
-    washroom: "blue",
-    emergency: "yellow",
-    hungry: "red",
-  };
 
   return (
     <View style={[styles.container, { borderColor }]}>

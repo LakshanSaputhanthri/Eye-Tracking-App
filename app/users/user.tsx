@@ -12,6 +12,7 @@ const User = () => {
   const [count, setCount] = useState(0);
   const [data, setData] = useState({ username: "", password: "" });
   const [patientData, setPatientData] = useState<PATIENT[]>();
+  const [alert, setAlert] = useState("normal");
 
   const getUserCredentialsFromStorage = async () => {
     try {
@@ -30,6 +31,18 @@ const User = () => {
   useEffect(() => {
     getUserCredentialsFromStorage();
   }, []);
+  axios
+    .get<PATIENT[]>(`${BASEURL}/api/v1/users/my_patients/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(function (response) {
+      setPatientData(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
   useEffect(() => {
     if (data) {
@@ -45,28 +58,30 @@ const User = () => {
           console.log(error, "login");
         });
     }
-  }, [data]);
+  }, [data, count]);
+
   useEffect(() => {
     setTimeout(() => {
       setCount((count) => count + 1);
     }, 120000);
   }, [count]);
+
   useEffect(() => {
-    console.log(count);
     axios
-      .get<PATIENT[]>(`${BASEURL}/api/v1/users/my_patients/`, {
+      .get<any>(`${BASEURL}/api/v1/users/show_alerts/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then(function (response) {
-        setPatientData(response.data);
-        console.log(response.data);
+        console.log(response.data["status"], "alert");
+        setAlert(response.data["status"]);
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch(function (error: any) {
+        console.log(error, "alert error");
       });
   }, [token, count]);
+
   return (
     <View>
       <View>{!patientData && <Text>Loading...</Text>}</View>
