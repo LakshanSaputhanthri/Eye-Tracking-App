@@ -14,7 +14,6 @@ interface Props {
   hospital: string;
   status: string;
   description: string;
-  count: number;
 }
 export const UserDetailCard = ({
   firstName,
@@ -25,28 +24,9 @@ export const UserDetailCard = ({
   description,
   lastName,
   emergencyNumber,
-  count,
 }: Props) => {
-  let borderColor = "#77ff99";
-
-  if (status === "emergency") {
-    borderColor = "#ff5566";
-  }
-  if (status === "hungry") {
-    borderColor = "#f6f765";
-  }
-  if (status === "toilet") {
-    borderColor = "#6677ff";
-  }
-
   return (
-    <View style={[styles.container, { borderColor }]}>
-      <View style={styles.row}>
-        <Text style={styles.title}>status</Text>
-        <Text style={styles.description}>
-          {status === null ? "Normal" : status}
-        </Text>
-      </View>
+    <View style={[styles.container]}>
       <View style={styles.row}>
         <Text style={styles.title}>Patient First Name</Text>
         <Text style={styles.description}>{firstName}</Text>

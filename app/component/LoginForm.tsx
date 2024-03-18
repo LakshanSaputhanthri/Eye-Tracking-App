@@ -43,44 +43,46 @@ const LoginForm = () => {
     <View style={styles.container}>
       {mutation.isPending && <Text>Login...</Text>}
       <>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry
-        />
         {!mutation.isPending && (
-          <View
-            style={{
-              backgroundColor: "blue",
-              padding: 10,
-              width: "100%",
-              borderRadius: 10,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              onChangeText={(text) => setUsername(text)}
+              value={username}
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              onChangeText={(text) => setPassword(text)}
+              value={password}
+              secureTextEntry
+            />
+            <View
               style={{
+                backgroundColor: "blue",
+                padding: 10,
                 width: "100%",
-                display: "flex",
-                direction: "inherit",
+                borderRadius: 10,
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              onPress={() => mutation.mutate()}
             >
-              <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  direction: "inherit",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => mutation.mutate()}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableOpacity>
+            </View>
+          </>
         )}
       </>
     </View>
